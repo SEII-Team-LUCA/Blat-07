@@ -6,6 +6,8 @@ import java.awt.event.ActionListener;
 import javax.swing.JPanel;
 
 import de.uni_hamburg.informatik.swt.se2.kino.fachwerte.Datum;
+import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.Beobachtbar;
+import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.Beobachter;
 
 /**
  * Mit diesem Werkzeug kann ein Datum ausgewählt werden.
@@ -16,7 +18,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.fachwerte.Datum;
  * @author SE2-Team
  * @version SoSe 2015
  */
-public class DatumAuswaehlWerkzeug
+public class DatumAuswaehlWerkzeug extends Beobachtbar
 {
     private DatumAuswaehlWerkzeugUI _ui;
     private Datum _ausgewaehltesDatum;
@@ -25,12 +27,13 @@ public class DatumAuswaehlWerkzeug
      * Initialisiert dieses Werkzeug. Das initial ausgewählte Datum ist der
      * heutige Tag.
      */
-    public DatumAuswaehlWerkzeug()
+    public DatumAuswaehlWerkzeug(Beobachter b)
     {
         _ausgewaehltesDatum = Datum.heute();
         _ui = new DatumAuswaehlWerkzeugUI(
                 _ausgewaehltesDatum.getFormatiertenString());
         registriereUIAktionen();
+        setzeBeobachter(b);
     }
 
     /**
@@ -41,6 +44,7 @@ public class DatumAuswaehlWerkzeug
         _ausgewaehltesDatum = _ausgewaehltesDatum.vorherigerTag();
         _ui.getDatumLabel()
                 .setText(_ausgewaehltesDatum.getFormatiertenString());
+        informiereUeberAenderung();
     }
 
     /**
@@ -51,6 +55,7 @@ public class DatumAuswaehlWerkzeug
         _ausgewaehltesDatum = _ausgewaehltesDatum.naechsterTag();
         _ui.getDatumLabel()
                 .setText(_ausgewaehltesDatum.getFormatiertenString());
+        informiereUeberAenderung();
     }
 
     /**
@@ -97,5 +102,14 @@ public class DatumAuswaehlWerkzeug
                 weiterButtonWurdeGedrueckt();
             }
         });
+    }
+    
+    @Override
+    public void informiereUeberAenderung()
+    {
+        for (Beobachter beobachter : _beobachter)
+        {
+            beobachter.reagiereAufAenderung(1);
+        }
     }
 }
