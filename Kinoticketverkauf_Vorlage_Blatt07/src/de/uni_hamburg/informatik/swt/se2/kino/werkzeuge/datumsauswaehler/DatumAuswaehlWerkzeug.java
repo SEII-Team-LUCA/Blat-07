@@ -26,6 +26,8 @@ public class DatumAuswaehlWerkzeug extends Beobachtbar
     /**
      * Initialisiert dieses Werkzeug. Das initial ausgewählte Datum ist der
      * heutige Tag.
+     * 
+     * @param b der Beobachter, der sich registriert.
      */
     public DatumAuswaehlWerkzeug(Beobachter b)
     {
@@ -104,6 +106,9 @@ public class DatumAuswaehlWerkzeug extends Beobachtbar
         });
     }
     
+    /**
+     * Sagt allen Beobachtern aus dem Set, dass was voll krasses passiert ist und sie sich das lieber mal anschauen sollten.
+     */
     @Override
     public void informiereUeberAenderung()
     {

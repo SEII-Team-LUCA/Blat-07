@@ -7,6 +7,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.fachwerte.Datum;
 import de.uni_hamburg.informatik.swt.se2.kino.materialien.Kino;
 import de.uni_hamburg.informatik.swt.se2.kino.materialien.Tagesplan;
 import de.uni_hamburg.informatik.swt.se2.kino.materialien.Vorstellung;
+import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.Beobachter;
 import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.datumsauswaehler.DatumAuswaehlWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.platzverkauf.PlatzVerkaufsWerkzeug;
 import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.vorstellungsauswaehler.VorstellungsAuswaehlWerkzeug;
@@ -19,7 +20,7 @@ import de.uni_hamburg.informatik.swt.se2.kino.werkzeuge.vorstellungsauswaehler.V
  * @author SE2-Team
  * @version SoSe 2015
  */
-public class KassenWerkzeug
+public class KassenWerkzeug implements Beobachter
 {
     // Das Material dieses Werkzeugs
     private Kino _kino;
@@ -47,8 +48,8 @@ public class KassenWerkzeug
 
         // Subwerkzeuge erstellen
         _platzVerkaufsWerkzeug = new PlatzVerkaufsWerkzeug();
-        _datumAuswaehlWerkzeug = new DatumAuswaehlWerkzeug();
-        _vorstellungAuswaehlWerkzeug = new VorstellungsAuswaehlWerkzeug();
+        _datumAuswaehlWerkzeug = new DatumAuswaehlWerkzeug(this);
+        _vorstellungAuswaehlWerkzeug = new VorstellungsAuswaehlWerkzeug(this);
 
         // UI erstellen (mit eingebetteten UIs der direkten Subwerkzeuge)
         _ui = new KassenWerkzeugUI(_platzVerkaufsWerkzeug.getUIPanel(),
@@ -67,14 +68,15 @@ public class KassenWerkzeug
      */
     private void registriereUIAktionen()
     {
-        _ui.getBeendenButton().addActionListener(new ActionListener()
-        {
-            @Override
-            public void actionPerformed(ActionEvent e)
+        _ui.getBeendenButton()
+            .addActionListener(new ActionListener()
             {
-                reagiereAufBeendenButton();
-            }
-        });
+                @Override
+                public void actionPerformed(ActionEvent e)
+                {
+                    reagiereAufBeendenButton();
+                }
+            });
     }
 
     /**
@@ -118,5 +120,24 @@ public class KassenWerkzeug
     private Vorstellung getAusgewaehlteVorstellung()
     {
         return _vorstellungAuswaehlWerkzeug.getAusgewaehlteVorstellung();
+    }
+
+    /**
+     * Der Beobachter reagiert auf eine Änderung, die ihm durch eine beobachtbare Klasse mitgeteilt wurde.
+     * 
+     * @param i ein int zur Differenzierung der aufrufenden Klasse
+     */
+    @Override
+    public void reagiereAufAenderung(int i)
+    {
+        if (i == 1)
+        {
+            setzeTagesplanFuerAusgewaehltesDatum();
+        }
+        if (i == 2)
+        {
+            setzeAusgewaehlteVorstellung();
+        }
+
     }
 }

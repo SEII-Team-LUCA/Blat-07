@@ -27,6 +27,8 @@ public class VorstellungsAuswaehlWerkzeug extends Beobachtbar
 
     /**
      * Initialisiert das Werkzeug.
+     * 
+     * @param b der Beobachter, der sich registriert.
      */
     public VorstellungsAuswaehlWerkzeug(Beobachter b)
     {
@@ -122,6 +124,9 @@ public class VorstellungsAuswaehlWerkzeug extends Beobachtbar
                 });
     }
     
+    /**
+     * Sagt allen Beobachtern aus dem Set, dass was voll krasses passiert ist und sie sich das lieber mal anschauen sollten.
+     */
     @Override
     public void informiereUeberAenderung()
     {
